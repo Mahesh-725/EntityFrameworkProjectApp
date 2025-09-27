@@ -24,5 +24,13 @@ namespace EntityFrameworkProjectApp.Controllers
 
             return Ok(currencies);
         }
+
+        [HttpGet("{id}")]  // retrieving the record using PK.
+        public async Task<IActionResult> GetCurrencyByIdAsync([FromRoute] int id)
+        {
+            var currencies = await _appDbContext.Currencies.FindAsync(id);
+
+            return Ok(currencies);
+        }
     }
 }
