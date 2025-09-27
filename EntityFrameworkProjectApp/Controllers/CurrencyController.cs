@@ -51,12 +51,40 @@ namespace EntityFrameworkProjectApp.Controllers
         //}
 
         //Get multiple records using Multiple (optional and/or required) parameters
-        [HttpGet("{name}")]  // retrieving the record using PK.
+        [HttpGet("{name}")] 
         public async Task<IActionResult> GetCurrencyByNameAsync([FromRoute] string name, [FromQuery] string? description)
         {
             var currencies = await _appDbContext.Currencies.Where(x =>
                 x.Title == name
                 && (string.IsNullOrEmpty(description) || x.Description == description)).ToListAsync();
+
+            return Ok(currencies);
+        }
+
+        //Get Records Based on IDs(manual)
+        //[HttpGet("all")]
+        //public async Task<IActionResult> GetCurrenciesByIdsAsync()
+        //{
+        //    var ids = new List<int> { 1, 3, 5 };
+        //    var currencies = await _appDbContext.Currencies
+        //        .Where(x => ids.Contains(x.Id)).ToListAsync();
+
+        //    return Ok(currencies);
+        //}
+
+        //Get Records Based on IDs(Dynamically)
+        [HttpPost("all")]
+        public async Task<IActionResult> GetCurrenciesByIdsAsync([FromBody] List<int> ids)
+        {
+            //var ids = new List<int> { 1, 3, 5 };
+            var currencies = await _appDbContext.Currencies
+                .Where(x => ids.Contains(x.Id))
+                .Select(x=>new Currency() //this select statement helps to retrieve only specifid coulmns here id, title values will be displayed
+                {
+                    Id=x.Id,
+                    Title=x.Title,
+                })
+                .ToListAsync();
 
             return Ok(currencies);
         }
