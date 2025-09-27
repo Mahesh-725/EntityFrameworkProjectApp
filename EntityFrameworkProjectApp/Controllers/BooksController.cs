@@ -17,9 +17,9 @@ namespace EntityFrameworkProjectApp.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> AddBooks([FromBody] Book model)
+        public async Task<IActionResult> AddNewBook([FromBody] Book model)
         {
-            _appDbContext.Books.Add(model);
+            _appDbContext.Books.Add(model); // Add() is used to insert only one record at a time.
             await _appDbContext.SaveChangesAsync();
 
             return Ok(model);
@@ -31,6 +31,15 @@ namespace EntityFrameworkProjectApp.Controllers
             var books=await _appDbContext.Books.ToListAsync();
 
             return Ok(books);
+        }
+
+        [HttpPost("bulk")]
+        public async Task<IActionResult> AdBooks([FromBody] List<Book> model)
+        {
+            _appDbContext.Books.AddRange(model); // AddRange() is used to insert multiple record at a time.
+            await _appDbContext.SaveChangesAsync();
+
+            return Ok(model);
         }
     }
 }
