@@ -6,5 +6,6 @@
         public String? Title { get; set; }
         public String? Description { get; set; }
 
+        public ICollection<BookPrice>? BookPrices { get; set; }
     }
 }
