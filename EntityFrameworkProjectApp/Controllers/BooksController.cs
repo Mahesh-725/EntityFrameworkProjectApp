@@ -41,5 +41,24 @@ namespace EntityFrameworkProjectApp.Controllers
 
             return Ok(model);
         }
+
+        [HttpPut("{BookId}")]
+        public async Task<IActionResult> UpdateBook([FromRoute] int BookId, [FromBody] Book model)
+        {
+            var book = _appDbContext.Books.FirstOrDefault(x => x.Id == BookId);
+
+            if(book == null)
+            {
+                return NotFound();
+            }
+
+            book.Title = model.Title;
+            book.Description = model.Description;
+            book.NoOfPages = model.NoOfPages;
+
+            await _appDbContext.SaveChangesAsync();
+
+            return Ok(model);
+        }
     }
 }
