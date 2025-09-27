@@ -36,27 +36,27 @@ namespace EntityFrameworkProjectApp.Controllers
             return Ok(currencies);
         }
 
-        //[HttpGet("{name}/{description}")]
-        //public async Task<IActionResult> GetCurrencyByIdAsync([FromRoute] string name, [FromRoute] string description)
+        ////Get one record using Multiple (optional and/or required) parameters
+        //[HttpGet("{name}")]  // retrieving the record using PK.
+        //public async Task<IActionResult> GetCurrencyByIdAsync([FromRoute] string name, [FromQuery] string? description)
         //{
         //    //var currencies = await _appDbContext.Currencies.Where(x => x.Title == name).FirstAsync();  //when data present retreives the data,and throws exception if no data match.
         //    //var currencies = await _appDbContext.Currencies.Where(x => x.Title == name).SingleAsync(); //when data present retreives the data,and throws exception if no data match.
         //    //var currencies = await _appDbContext.Currencies.Where(x => x.Title == name).SingleOrDefaultAsync(); // when data present retrieves the data and the data should unique if duplicates present throwa exception, give null if no data match.
-        //    var currencies = await _appDbContext.Currencies.FirstOrDefaultAsync(x => x.Title == name && x.Description == description);
+        //    var currencies = await _appDbContext.Currencies.FirstOrDefaultAsync(x => 
+        //        x.Title == name 
+        //        && (string.IsNullOrEmpty(description) || x.Description == description));
 
         //    return Ok(currencies);
         //}
 
-        //Get one record using Multiple (optional and/or required) parameters
+        //Get multiple records using Multiple (optional and/or required) parameters
         [HttpGet("{name}")]  // retrieving the record using PK.
-        public async Task<IActionResult> GetCurrencyByIdAsync([FromRoute] string name, [FromQuery] string? description)
+        public async Task<IActionResult> GetCurrencyByNameAsync([FromRoute] string name, [FromQuery] string? description)
         {
-            //var currencies = await _appDbContext.Currencies.Where(x => x.Title == name).FirstAsync();  //when data present retreives the data,and throws exception if no data match.
-            //var currencies = await _appDbContext.Currencies.Where(x => x.Title == name).SingleAsync(); //when data present retreives the data,and throws exception if no data match.
-            //var currencies = await _appDbContext.Currencies.Where(x => x.Title == name).SingleOrDefaultAsync(); // when data present retrieves the data and the data should unique if duplicates present throwa exception, give null if no data match.
-            var currencies = await _appDbContext.Currencies.FirstOrDefaultAsync(x => 
-                x.Title == name 
-                && (string.IsNullOrEmpty(description) || x.Description == description));
+            var currencies = await _appDbContext.Currencies.Where(x =>
+                x.Title == name
+                && (string.IsNullOrEmpty(description) || x.Description == description)).ToListAsync();
 
             return Ok(currencies);
         }
