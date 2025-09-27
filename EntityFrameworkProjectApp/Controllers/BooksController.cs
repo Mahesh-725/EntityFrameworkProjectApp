@@ -42,7 +42,7 @@ namespace EntityFrameworkProjectApp.Controllers
             return Ok(model);
         }
 
-        [HttpPut("{BookId}")]
+        [HttpPut("{BookId:int}")]
         public async Task<IActionResult> UpdateBook([FromRoute] int BookId, [FromBody] Book model)
         {
             var book = _appDbContext.Books.FirstOrDefault(x => x.Id == BookId);
@@ -60,5 +60,17 @@ namespace EntityFrameworkProjectApp.Controllers
 
             return Ok(model);
         }
+
+        [HttpPut("bulk")]
+        public async Task<IActionResult> UpdateBookInBulk()
+        {
+           await _appDbContext.Books
+                .Where(x => x.NoOfPages == 352)
+                .ExecuteUpdateAsync(x=>x
+                .SetProperty(p => p.Description, "Mahesh"));
+
+            return Ok();
+        }
+
     }
 }
