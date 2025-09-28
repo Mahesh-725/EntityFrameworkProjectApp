@@ -30,16 +30,17 @@ namespace EntityFrameworkProjectApp.Controllers
 
         public async Task<IActionResult> GetBooks()
         {
-            var books = await _appDbContext.Books.Select(x => new Book()
-            {
-                Id = x.Id,
-                Title = x.Title,
-                Author = x.Author,
-                Language=x.Language,
-                LanguageId=x.LanguageId
-            }).ToListAsync();
+            var books = await _appDbContext.Books.Include(x=>x.Author).ToListAsync();
 
             return Ok(books);
+        }
+
+        [HttpGet("languages")]
+        public async Task<IActionResult> GetAllLanguagesAsync()
+        {
+            var languages = await _appDbContext.Languages.Include(x=>x.Books).ToListAsync();
+
+            return Ok(languages);
         }
 
         [HttpPost("bulk")]

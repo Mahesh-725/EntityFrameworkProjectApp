@@ -13,7 +13,7 @@
 
         public int? AuthorId { get; set; }
 
-        public Language? Language { get; set; }
+        //public Language? Language { get; set; }
         public Author? Author { get; set; }
 
     }
