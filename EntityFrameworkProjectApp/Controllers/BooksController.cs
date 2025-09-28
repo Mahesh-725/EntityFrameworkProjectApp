@@ -26,11 +26,23 @@ namespace EntityFrameworkProjectApp.Controllers
             return Ok(model);
         }
 
+        //[HttpGet("allBooks")]
+
+        //public async Task<IActionResult> GetBooks()
+        //{
+        //    var books = await _appDbContext.Books.ToListAsync();
+
+        //    return Ok(books);
+        //}
+
         [HttpGet("allBooks")]
 
         public async Task<IActionResult> GetBooks()
         {
-            var books = await _appDbContext.Books.Include(x=>x.Author).ToListAsync();
+            var books = await _appDbContext.Books.FirstAsync();
+
+           await _appDbContext.Entry(books).Reference(x => x.Author).LoadAsync();//Reference is used to retrives only one related record from the database. 
+           //await _appDbContext.Entry(books).Reference(x => x.Language).LoadAsync();
 
             return Ok(books);
         }
@@ -38,7 +50,12 @@ namespace EntityFrameworkProjectApp.Controllers
         [HttpGet("languages")]
         public async Task<IActionResult> GetAllLanguagesAsync()
         {
-            var languages = await _appDbContext.Languages.Include(x=>x.Books).ToListAsync();
+            //var languages = await _appDbContext.Languages.Include(x => x.Books).ToListAsync();
+            var languages = await _appDbContext.Languages.ToListAsync();
+            foreach (var language in languages)
+            {
+                await _appDbContext.Entry(language).Collection(x => x.Books).LoadAsync(); // clction is used work on the multiple records.
+            }
 
             return Ok(languages);
         }
