@@ -22,7 +22,7 @@ namespace EntityFrameworkProjectApp.Controllers
         {
             //var currencies = _appDbContext.Currencies.ToList();
 
-            var currencies = await _appDbContext.Currencies.ToListAsync();
+            var currencies = await _appDbContext.Currencies.AsNoTracking().ToListAsync();
 
             return Ok(currencies);
         }
