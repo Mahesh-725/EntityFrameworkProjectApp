@@ -27,9 +27,17 @@ namespace EntityFrameworkProjectApp.Controllers
         }
 
         [HttpGet("allBooks")]
+
         public async Task<IActionResult> GetBooks()
         {
-            var books=await _appDbContext.Books.ToListAsync();
+            var books = await _appDbContext.Books.Select(x => new Book()
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Author = x.Author,
+                Language=x.Language,
+                LanguageId=x.LanguageId
+            }).ToListAsync();
 
             return Ok(books);
         }
