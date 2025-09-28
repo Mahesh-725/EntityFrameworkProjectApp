@@ -39,13 +39,22 @@ namespace EntityFrameworkProjectApp.Controllers
 
         public async Task<IActionResult> GetBooks()
         {
-            var books = await _appDbContext.Books.FirstAsync();
-
-           await _appDbContext.Entry(books).Reference(x => x.Author).LoadAsync();//Reference is used to retrives only one related record from the database. 
-           //await _appDbContext.Entry(books).Reference(x => x.Language).LoadAsync();
+            var books = await _appDbContext.Books.FromSql($"select * from dbo.Books").ToListAsync();
 
             return Ok(books);
         }
+
+        //[HttpGet("allBooks")]
+
+        //public async Task<IActionResult> GetBooks()
+        //{
+        //    var books = await _appDbContext.Books.FirstAsync();
+
+        //   await _appDbContext.Entry(books).Reference(x => x.Author).LoadAsync();//Reference is used to retrives only one related record from the database. 
+        //   //await _appDbContext.Entry(books).Reference(x => x.Language).LoadAsync();
+
+        //    return Ok(books);
+        //}
 
         [HttpGet("languages")]
         public async Task<IActionResult> GetAllLanguagesAsync()
