@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EntityFrameworkProjectApp.Controllers
 {
@@ -70,6 +71,35 @@ namespace EntityFrameworkProjectApp.Controllers
                 .SetProperty(p => p.Description, "Mahesh"));
 
             return Ok();
+        }
+
+        [HttpDelete("{BookId}")]
+        public async Task<IActionResult> DeleteBookById([FromRoute] int BookId)
+        {
+            var book = new Book { Id = BookId };
+            _appDbContext.Entry(book).State = EntityState.Deleted;
+            await _appDbContext.SaveChangesAsync();
+
+            //var book = _appDbContext.Books.FirstOrDefault(x => x.Id == BookId);
+
+            //if (book == null)
+            //{
+            //    return NotFound(new
+            //    {
+            //        success = false,
+            //        message = "Book Record Not Found.",
+            //    });
+            //}
+
+
+            //_appDbContext.Books.Remove(book);
+            //await _appDbContext.SaveChangesAsync();
+
+            return Ok(new
+            {
+                success = true,
+                message = "Book Record Deleted successfully.",
+            });
         }
 
     }
