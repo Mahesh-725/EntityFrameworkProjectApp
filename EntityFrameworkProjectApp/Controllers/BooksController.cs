@@ -37,10 +37,25 @@ namespace EntityFrameworkProjectApp.Controllers
         [HttpPost("bulk")]
         public async Task<IActionResult> AdBooks([FromBody] List<Book> model)
         {
-            _appDbContext.Books.AddRange(model); // AddRange() is used to insert multiple record at a time.
-            await _appDbContext.SaveChangesAsync();
+            try
+            {
+                _appDbContext.Books.AddRange(model);
+                await _appDbContext.SaveChangesAsync();
 
-            return Ok(model);
+                return Ok(new
+                {
+                    message = "Books added successfully.",
+                    data = model
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    message = "Failed to add books.",
+                    error = ex.InnerException?.Message ?? ex.Message
+                });
+            }
         }
 
         [HttpPut("{BookId:int}")]
@@ -99,6 +114,24 @@ namespace EntityFrameworkProjectApp.Controllers
             {
                 success = true,
                 message = "Book Record Deleted successfully.",
+            });
+        }
+
+        [HttpDelete("bulk/{BookId}")]
+        public async Task<IActionResult> DeleteBooksInBulk([FromRoute] int BookId)
+        {
+
+            //var books = await _appDbContext.Books.Where(x => x.Id < 2).ToListAsync();
+            //_appDbContext.Books.RemoveRange(books);
+            //await _appDbContext.SaveChangesAsync();
+
+            var books = await _appDbContext.Books.Where(x=>x.Id < BookId).ExecuteDeleteAsync();
+
+            return Ok(new
+            {
+                success = true,
+                message = "Book Record Deleted successfully.",
+                data=books
             });
         }
 
